@@ -4,13 +4,17 @@ import serial
 import time
 from easygui import *
 
+print("1")
+
 ser = serial.Serial('/dev/ttyUSB0', 57600)
 ser.write(b"\xF6")
-rep=ser.read(2);
+rep = ser.read(2);
+
+print("go")
 
 reply='bho'
-if rep == b'ep' :
-	choices = ["Convert Image","Load Converted Image","Preview","Print","Set Burning Time","Send Laser Home", "Reset Printer","Pause","Quit"]
+if rep == b'\xff\t' :
+	choices = ["Convert Image","Load Converted Image","Preview","Print","Set Burning Time","Send Laser Home", "Reset Printer","Pause","Quit","Up", "Stop"]
 
 	while (reply != 'Quit'):
 		reply = choicebox("What would you like to do?", choices=choices)
@@ -28,7 +32,7 @@ if rep == b'ep' :
 			msgbox("Check converted.bmp for a (Vertically flipped) preview")
 		elif reply == choices[1]:
 				print('Sending converted.bmp to machine, please wait')
-				ser.write(b"\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE")
+				ser.write(b"\xFF\x06\x01\x00")
 				time.sleep(3)
 				print('.')
 				ser.write(open("converted.bmp","rb").read())
@@ -50,9 +54,17 @@ if rep == b'ep' :
 		elif reply == choices[5]:
 			ser.write(b"\xF3")
 		elif reply == choices[6]:
-			ser.write(b"\xF9")
+			print("U")
+			ser.write(b"\xFF\x03\x01\x00")
 		elif reply == choices[7]:
 			ser.write(b"\xF2")
+		elif reply == "Up":
+			print("p")
+			ser.write(b"\xFF\x01\x01\x00")
+		elif reply == "Stop":
+			print("p")
+			ser.write(b"\xFF\x01\x02\x00")
+
 
 else :
 	print('Printer not connected')

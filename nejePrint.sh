@@ -12,15 +12,15 @@ else
    btime=20
 fi
 
-#echo $btime
-#echo -e "\x$btime"
+echo $btime
+echo -e "\x$btime"
 
 
 actualsize=$(wc -c <"$2")
 
 if [ $actualsize -ne 32830 ]; then
     echo "Image must be 520x520 BMP 1 bit color depth"
-   exit
+   #exit
 fi
 
 
@@ -36,7 +36,7 @@ sleep 1
 echo done
 
 echo Sending
-echo -e '\xFE\xFE\xFE\xFE\xFE\xFE\xFE\xFE' >$1
+echo -e '\xFF\x06\x01\x00' >$1
 sleep 3
 cat $2 > $1
 echo done
@@ -46,12 +46,21 @@ echo home
 echo -e '\xF3' > $1
 sleep 5
 
-echo Burning Time 0x$btime
-echo -e '\x$btime' > $1
+echo burn
+echo -e '\xF3' > $1
 sleep 1
 
+echo Burning Time 0x$btime
+echo -e '\xFF\x05\x78\x00' > $1
+sleep 1
+
+echo print
+echo -e '\xFF\x03\x01\x00' > $1
+sleep 5
+
+
 echo preview
-echo -e '\xF4' > $1
+echo -e '\xFF\x01\x01\x00' > $1
 
 
 echo All Done

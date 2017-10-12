@@ -10,8 +10,10 @@ ser.write(b"\xF6")
 rep=ser.read(2);
 
 print('Replied')
+print(rep)
 
-if rep == b'ep' :
+
+if rep == b'\xff\t' :
 	root = tk.Tk()
 	root.withdraw()
 	file_path = filedialog.askopenfilename()
